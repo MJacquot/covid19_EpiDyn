@@ -1,30 +1,44 @@
-# Titre: Modélisation de la dynamique épidémique du COVID-19 : 
+# Titre: Modelisation de la dynamique epidemique du COVID-19 : 
 # Estimations des taux d'infection des populations et 
-# des dates de fin des vagues épidémiques dans différents pays
+# des dates de fin des vagues epidemiques dans differents pays
 # Auteurs: Patrick Gasqui, Maude Jacquot
-# Créé le 14 Avril 2020
-# Dernière modification le 20 Avril 2020
+# Cree le 14 Avril 2020
+# Derniere modification le 21 Avril 2020
 # 
-# Source de données: https://github.com/CSSEGISandData/COVID-19
-# Période considérée: du 22/01/2020 au 18/04/2020
+# Source de donnees: https://github.com/CSSEGISandData/COVID-19
+# Periode consideree: du 22/01/2020 au 20/04/2020
 # 
-# Variables clés:
-#  cas confirmés:	xcasconf
-#  cas décédés:		xcasdece
-#  cas guéris:		xcasguer
+# Variables cles:
+#  cas confirmes:	xcasconf
+#  cas decedes:		xcasdece
+#  cas gueris:		xcasguer
 
 
 ####
 # Chargement des packages et fonctions
 ####
 require(deSolve)
+source("FunctionCovidVisuMonde.R")
 source("FunctionCovidModelEstim.R")
 
+# Intinialisation de la date de fin de l'analyse
+vdatFic <- c("2004")
+vdatfin <- c("20-04-2020")
+
+
 ############################################
-# Modélisation
+# Visualisation des observations pour le Monde
 ############################################
 
-# Création du fichier de sortie résumé
+vpays   <- c("Monde")
+vtaillepop <- 7530.0	# en million d'habitants
+FctVisuCovidMonde(vpays,vdatfin,vtaillepop,vdatFic)
+
+############################################
+# Modelisation
+############################################
+
+# Creation du fichier de sortie resume
 vnomFicOutResnum <- paste("ResNumParPays",".txt",sep="")
 sink(vnomFicOutResnum,append=FALSE)
 cat("Pays",";","Region")
@@ -38,11 +52,7 @@ cat(";","taux inf. pop. en % pour TDR=0.01",";","taux inf. pop. en % pour TDR=0.
 cat("\n")
 sink()
 
-# Intinialisation de la date de fin de l'analyse
-vdatFic <- c("1804")
-vdatfin <- c("18-04-2020")
-
-# Initialisation du nombre de jour a prendre en compte pour les estimations (vague épidémique incomplète)
+# Initialisation du nombre de jour a prendre en compte pour les estimations (vague epidemique incomplete)
 vnjestim <- 10 # les 10 derniers jours
 
 ####
@@ -51,7 +61,7 @@ vnjestim <- 10 # les 10 derniers jours
 
 vpays   <- c("Austria")
 vregion <- c("")
-vindJdebut <- 45	# 55 	
+vindJdebut <- 50	
 vindJfin <- 200
 vtaillepop <- 8.8	# en million d'habitants
 vdelta <- 0
@@ -63,7 +73,7 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 
 vpays   <- c("Spain")
 vregion <- c("")
-vindJdebut <- 35	# 40
+vindJdebut <- 35
 vindJfin <- 200
 vtaillepop <- 49.3	# en million d'habitants
 vdelta <- 0
@@ -75,7 +85,7 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 
 vpays   <- c("Italy")
 vregion <- c("")
-vindJdebut <- 15	# 20
+vindJdebut <- 15
 vindJfin <- 350
 vtaillepop <- 60.4	# en million d'habitants
 vdelta <- 0
@@ -87,8 +97,8 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 
 vpays   <- c("France")
 vregion <- c("")
-vindJdebut <- 35	# 45
-vindJfin <- 250
+vindJdebut <- 35
+vindJfin <- 300
 vtaillepop <- 67.1	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -111,7 +121,7 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 
 vpays   <- c("Belgium")
 vregion <- c("")
-vindJdebut <- 45	# 40
+vindJdebut <- 45
 vindJfin <- 300	# 200
 vtaillepop <- 11.6	# en million d'habitants
 vdelta <- 0
@@ -123,7 +133,7 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 
 vpays   <- c("Switzerland")
 vregion <- c("")
-vindJdebut <- 45	# 50
+vindJdebut <- 50
 vindJfin   <- 200
 vtaillepop <- 8.3	# en million d'habitants
 vdelta <- 0
@@ -142,7 +152,7 @@ vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
 
 ####
-## Analyse pour la Suède
+## Analyse pour la Suede
 ####
 
 vpays   <- c("Sweden")
@@ -183,7 +193,7 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 
 vpays   <- c("Canada")
 vregion <- c("")
-vindJdebut <- 40	# 55
+vindJdebut <- 40
 vindJfin <- 200
 vtaillepop <- 35.9	# en million d'habitants
 vdelta <- 0
@@ -191,7 +201,7 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 
 ####
 ## Analyse pour les Pays-Bas 
-## Problème des guérisons ???
+## Probleme des guerisons ???
 ####
 
 vpays   <- c("Netherlands")
@@ -203,8 +213,8 @@ vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
 
 ####
-## Analyse pour le Royaume-Uni
-## Problème des guérisons ???
+## Analyse pour la Grande-Bretagne 
+## Probleme des guerisons ???
 ####
 
 vpays   <- c("United Kingdom")
@@ -214,4 +224,5 @@ vindJfin   <- 500
 vtaillepop <- 65.1	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
+
 

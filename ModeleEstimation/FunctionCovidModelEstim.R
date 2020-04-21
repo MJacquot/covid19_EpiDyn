@@ -1,9 +1,9 @@
-#' Fonction necessaire a l'estimation des parametres du modèle covid-19
+#' Fonction necessaire a l'estimation des parametres du modele covid-19
 #' Auteurs: Patrick Gasqui, Maude Jacquot
-#' Créé le 10 Avril 2020
+#' Cree le 10 Avril 2020
 #' Derniere modification le 19 Avril 2020
 
-# Estimation des paramètres du modèle et visualisation des résultats et des données pour un pays donné
+# Estimation des parametres du modele et visualisation des resultats et des donnees pour un pays donne
 FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJfin,vxnjestim,vxtaillepop,vxdatFic,vxdelta,vxnomFicOutResnum) {
 
   # Initialisation
@@ -17,7 +17,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   if (vpays=="Belgium") {nom_pays="la Belgique"}
   if (vpays=="Switzerland") {nom_pays="la Suisse"}
   if (vpays=="Denmark") {nom_pays="le Danemark"}
-  if (vpays=="Sweden") {nom_pays="la Suède"}
+  if (vpays=="Sweden") {nom_pays="la Suede"}
   if (vpays=="US") {nom_pays="les Etats-Unis"}
   if (vpays=="Portugal") {nom_pays="le Portugal"}
   if (vpays=="Canada") {nom_pays="le Canada"}
@@ -34,10 +34,10 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   vnomFicOutResnum <- vxnomFicOutResnum
   vdelta <- vxdelta
 
-  # date de début de suivi des données
+  # date de debut de suivi des donnees
   vdatdeb <- c("22-01-2020")
 
-  # chargement du nombre de cas confirmés cumulés par jour 
+  # chargement du nombre de cas confirmes cumules par jour 
   nomFicIn <- paste("covidCCO",vdatFic,".txt",sep="")
   xdatCSV <- read.csv(file=nomFicIn, header = TRUE, sep=",", dec = ".")
   nomCol <- dimnames(xdatCSV)[[2]]
@@ -51,10 +51,10 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
     xcasconf <- as.numeric(xdatCSV[selj,c(5:length(nomCol))])
   }
 
-  # rapport du nombre de "cas confirmés" sur la taille de la population (exprimée en million) en % pour 1000 habitants
+  # rapport du nombre de "cas confirmes" sur la taille de la population (exprimee en million) en % pour 1000 habitants
   xpropnbrepopulation <- (xcasconf[nbrejour]/(vtaillepop*1000000))*1000
 
-  # chargement du nombre de cas guéris cumulés par jour 
+  # chargement du nombre de cas gueris cumules par jour 
   nomFicIn <- paste("covidCGU",vdatFic,".txt",sep="")
   xdatCSV <- read.csv(file=nomFicIn, header = TRUE, sep=",", dec = ".")
   nomCol <- dimnames(xdatCSV)[[2]]
@@ -63,7 +63,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   selj <- ((xdatCSV[,2]==vpays)&(xdatCSV[,1]==vregion))
   xcasguer <- as.numeric(xdatCSV[selj,c(5:length(nomCol))])
 
-  # chargement du nombre de cas décédés cumulés par jour 
+  # chargement du nombre de cas decedes cumules par jour 
   nomFicIn <- paste("covidCMO",vdatFic,".txt",sep="")
   xdatCSV <- read.csv(file=nomFicIn, header = TRUE, sep=",", dec = ".")
   nomCol <- dimnames(xdatCSV)[[2]]
@@ -77,8 +77,8 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
     xcasdece <- as.numeric(xdatCSV[selj,c(5:length(nomCol))])
   }
 
-  # évaluation de la proportion de la population "infectée"
-  # rapport du nombre d'individus "infectés" sur la taille de la population (exprimée en million) en % pour 100 habitants
+  # evaluation de la proportion de la population "infectee"
+  # rapport du nombre d'individus "infectes" sur la taille de la population (exprimee en million) en % pour 100 habitants
   xtfd <- c(0.01,0.02,0.03)
   xZT2b <- (xcasdece[nbrejour] - (xtfd*(xcasconf[nbrejour])))/xtfd
   xNpinf <- ((xcasconf[nbrejour]+xZT2b)/(vtaillepop*1000000))*100
@@ -93,7 +93,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
     }
   pdf(file=nomFicGra,paper="a4r",height=7,width=10)
 
-  # Graphique du nombre de cas cumulés au cours du temps
+  # Graphique du nombre de cas cumules au cours du temps
   nbrejour <- length(xcasconf)	
   x <- 1:nbrejour
   y <- xcasconf
@@ -121,7 +121,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   legend("topleft",legend=vlegend,col=c(1,2,3,4),lty=rep(1,4),lwd=rep(2,4),cex=1.0,bg="white")
 
   # Graphique des nombres de cas par jour au cours du temps
-  # cas confirmés-guéris-décédés par jour ...
+  # cas confirmes-gueris-decedes par jour ...
   #
   x <- 1:nbrejour
   nbrejour <- length(xcasconf)	
@@ -129,11 +129,11 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   xjcasdece <- c(0,diff(xcasdece))
   xjcasguer <- c(0,diff(xcasguer))
   y <- xjcasconf
-  vtext <- paste(" Données pour ",nom_pays," du ",vdatdeb," au ",vdatfin,
-                "\n cas confirmés-décédés-guéris / jour",sep="")
+  vtext <- paste(" Données pour ",nom_pays," du ",vdatdeb," au ",vdatfin,":",
+                "\n nombre de cas confirmés ou décédés ou guéris par jour",sep="")
   if ( vregion != c("") ) {
-    vtext <- paste(" Données pour ",nom_pays," & ",vregion," du ",vdatdeb," au ",vdatfin,
-                 "\n cas confirmés-décédés-guéris / jour",sep="")
+    vtext <- paste(" Données pour ",nom_pays," & ",vregion," du ",vdatdeb," au ",vdatfin,":",
+                 "\n nombre de cas confirmés ou décédés ou guéris par jour",sep="")
     }
   plot(x,y,ylim=range(c(0,y)),type="n",xlab="Date",ylab="Nombre de cas ",
        main=vtext,axes=FALSE)
@@ -153,7 +153,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
               paste("Guéris"," : ",xcasguer[nbrejour],sep=""))
   legend("topleft",legend=vlegend,col=c(1,2,3),lty=rep(1,3),lwd=rep(2,3),cex=1.0,bg="white")
 
-  # Graphique des proportions des différents cas / cas confirmés au cours du temps
+  # Graphique des proportions des differents cas / cas confirmes au cours du temps
   x <- 1:nbrejour
   selk <- (xcasconf!=0.0)
   nbrejour <- length(xcasconf)	
@@ -164,13 +164,13 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   xpcasguer[selk] <- xcasguer[selk]/xcasconf[selk]
   xpcasacti[selk] <- xcasacti[selk]/xcasconf[selk]
   y <- xpcasacti
-  vtext <- paste(" Données pour ",nom_pays," du ",vdatdeb," au ",vdatfin,
+  vtext <- paste(" Données pour ",nom_pays," du ",vdatdeb," au ",vdatfin,":",
                 "\n proportion de cas actifs ou guéris ou décédés / cas confirmés",sep="")
   if ( vregion != c("") ) {
-    vtext <- paste(" Données pour ",nom_pays," & ",vregion," du ",vdatdeb," au ",vdatfin,
+    vtext <- paste(" Données pour ",nom_pays," & ",vregion," du ",vdatdeb," au ",vdatfin,":",
                  "\n proportion de cas actifs ou guéris ou décédés / cas confirmés",sep="")
     }
-  plot(x,y,ylim=range(c(0,1)),type="n",xlab="Date",ylab="Proportion de cas / cas confirmés",
+  plot(x,y,ylim=range(c(0,1)),type="n",xlab="Date",ylab="Proportion",
        main=vtext,axes=FALSE)
   vx1pos <- round(seq(from=1,to=nbrejour,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
@@ -190,11 +190,11 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
          text.col=2, box.col=2, box.lwd=2,bg="white")
 
     ############################################	
-    # Fonction de calcul du modèle de SEDO 
+    # Fonction de calcul du modele de SEDO 
     fctModelSEDO <- function( px, xcode ) { 
 
-      kd <- exp(px[1])	# pour les "cas décédés"
-      kg <- exp(px[2])	# pour les "cas guéris"
+      kd <- exp(px[1])	# pour les "cas decedes"
+      kg <- exp(px[2])	# pour les "cas gueris"
 
       nbJ <- 600
 
@@ -202,7 +202,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
       my.atol <- rep(1e-9,nbSEDO)
 
       fctModelSEDO <- function(t, y, p ) {
-        # paramètres locaux
+        # parametres locaux
         kds <- p[1]	
         kgs <- p[2]
         # sedo 
@@ -246,7 +246,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
       xpG[(xpG > 1.0)] <- 1.0
       xpD[(xpD > 1.0)] <- 1.0
 
-      # valeurs estimées 
+      # valeurs estimees 
       if ( xcode == 0 ) {		# xcode == 0
         yres <- rbind(xpD,xpG,xpA)
       } else {				# xcode == 1
@@ -258,14 +258,14 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
       }  # FIN : fctModelSEDO
 
     ############################################	
-    # Fonction pour le Critère des moindres carrés
+    # Fonction pour le Critere des moindres carres
     #
     fctMC2M <- function(px, xDMW) {
-      # matrice des données d'entrée :
-      # * YJobs1  (les proportions "décédés")
-      # * YJobs2  (les proportions "guéris")
+      # matrice des donnees d'entree :
+      # * YJobs1  (les proportions "decedes")
+      # * YJobs2  (les proportions "gueris")
       # * YJobs3  (les proportions "actifs")
-      # * joursSEDO  (les indices des jours dans l'échelle du SEDO )  
+      # * joursSEDO  (les indices des jours dans l'echelle du SEDO )  
       # * nkJ    (nombre total de jour pour l'estimation)
 
       YJobs <- xDMW[c(1:3),]
@@ -273,11 +273,11 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
 
       nkJ <- length(XJSEDO)
 
-      # fonction d'estimation du modèle de SEDO pour tous les jours 
+      # fonction d'estimation du modele de SEDO pour tous les jours 
       MYJest <- fctModelSEDO(px,0)
       YJest <- MYJest[,XJSEDO]
 
-      # calcul du critère des moindres carrés
+      # calcul du critere des moindres carres
       resMC <- 0.0
       for ( j in 1:nkJ ) {
         for ( i in 1:3 ) {
@@ -287,19 +287,19 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
           }
         }
 
-      # valeur du critère des MC
+      # valeur du critere des MC
       resMC
       }  # FIN : fctMC2M
 
   ############################################
-  # modèle logistique avec modèle de SEDO 
-  # Graphique des proportions des différents cas / cas confirmés au cours du temps
-  # avec les courbes estimées par le modèle
+  # modele logistique avec modele de SEDO 
+  # Graphique des proportions des differents cas / cas confirmes au cours du temps
+  # avec les courbes estimees par le modele
   nbK <- vindJfin	# nbrejour
   x <- 1:nbrejour
   y <- xpcasacti
   plot(x,y,ylim=range(c(0,1)),type="n",xlim=c(0,nbK),
-       xlab="Date",ylab="Proportion de cas / cas confirmés",
+       xlab="Date",ylab="Proportion",
        main=vtext,axes=FALSE)
   vx1pos <- round(seq(from=1,to=nbK,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
@@ -317,11 +317,11 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   nbrejour <- length(xcasconf)	
   x0 <- 1:(nbrejour)	# en jour  depuis j0
 
-  # les jours pour lesquels on utilise les données pour l'estimation
+  # les jours pour lesquels on utilise les donnees pour l'estimation
   joursPourEstim <- c((nbrejour-vnjestim+1):nbrejour)
   joursPourSEDOEstim <- c((joursPourEstim[1]-vindJdebut+1):(joursPourEstim[vnjestim]-vindJdebut+1))
 
-  # valeurs initiales des paramètres
+  # valeurs initiales des parametres
   kd0 <- 0.0020		
   kg0 <- 0.0500		
 
@@ -355,18 +355,18 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   lines(xte,xpG[indJ],lty=2,col=3,lwd=2)
   lines(xte,xpD[indJ],lty=2,col=2,lwd=2)
 
-  # date de début vague épidémie ? vindJdebut
+  # date de debut vague epidemie a vindJdebut
   dateDebutVague <- as.Date("2020-01-22") + xte[1]	
   VR0 <- list(vindJdebut,dateDebutVague)
 
-  # détermination de l'instant de croisement des courbes
+  # determination de l'instant de croisement des courbes
   xtmp <- abs(xpA-xpG)
   selk <- (xtmp==min(xtmp))
   jourCroisement <- xte[selk]
   dateCroisement <- as.Date("2020-01-22") + jourCroisement
   VR1 <- list(jourCroisement,dateCroisement)
 
-  # détermination de l'instant de réalisation du critère ? 0.01 
+  # determination de l'instant de realisation du critere a 0.01 
   selk <- (xpA < 0.01)
   indJA01est <- min(xte[selk])
   dateJA01est <- as.Date("2020-01-22") + indJA01est
@@ -374,7 +374,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   VR2 <- list(indJA01est,dateJA01est,deltaJA01est)
   abline(v=indJA01est,lty=3,col=1,lwd=3)
 
-  # détermination de l'instant de réalisation du critère ? 0.001 
+  # determination de l'instant de realisation du critere a 0.001 
   selk <- (xpA < 0.001)
   indJA02est <- min(xte[selk])
   dateJA02est <- as.Date("2020-01-22") + indJA02est
@@ -382,7 +382,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   VR3 <- list(indJA02est,dateJA02est,deltaJA02est)
   abline(v=indJA02est,lty=2,col=1,lwd=3)
 
-  # estimation de la proportion finale de décés
+  # estimation de la proportion finale de deces
   prop1Deces <- xpD[max(indJ)]	
   VR4 <- list(xpcasdece[nbrejour],prop1Deces)
 
@@ -404,7 +404,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   # Fermeture du fichier PDF
   dev.off()
 
-  # Export des résultats numériques au format csv avec ";" comme séparateur
+  # Export des resultats numeriques au format csv avec ";" comme separateur
   sink(vnomFicOutResnum,append=TRUE)
   cat(vpays)
   cat(";",VR0[[1]],";",paste(VR0[[2]],sep=""))
@@ -417,7 +417,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   cat("\n")
   sink()
   
-  # résultats a conserver 
+  # resultats a conserver 
   dataResSedo <- list(VR0,VR1,VR2,VR3,VR4,VR5,VR6)  
 
   dataResSedo
