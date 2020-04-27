@@ -1,7 +1,7 @@
 #' Fonction necessaire a l'estimation des parametres du modele covid-19
 #' Auteurs: Patrick Gasqui, Maude Jacquot
 #' Cree le 10 Avril 2020
-#' Derniere modification le 19 Avril 2020
+#' Derniere modification le 24 Avril 2020
 
 # Estimation des parametres du modele et visualisation des resultats et des donnees pour un pays donne
 FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJfin,vxnjestim,vxtaillepop,vxdatFic,vxdelta,vxnomFicOutResnum) {
@@ -79,7 +79,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
 
   # evaluation de la proportion de la population "infectee"
   # rapport du nombre d'individus "infectes" sur la taille de la population (exprimee en million) en % pour 100 habitants
-  xtfd <- c(0.01,0.02,0.03)
+  xtfd <- c(0.005,0.010,0.020)
   xZT2b <- (xcasdece[nbrejour] - (xtfd*(xcasconf[nbrejour])))/xtfd
   xNpinf <- ((xcasconf[nbrejour]+xZT2b)/(vtaillepop*1000000))*100
 
@@ -129,13 +129,14 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   xjcasdece <- c(0,diff(xcasdece))
   xjcasguer <- c(0,diff(xcasguer))
   y <- xjcasconf
+  maxy <- max(c(xjcasconf,xjcasdece,xjcasguer))
   vtext <- paste(" Données pour ",nom_pays," du ",vdatdeb," au ",vdatfin,":",
                 "\n nombre de cas confirmés ou décédés ou guéris par jour",sep="")
   if ( vregion != c("") ) {
     vtext <- paste(" Données pour ",nom_pays," & ",vregion," du ",vdatdeb," au ",vdatfin,":",
                  "\n nombre de cas confirmés ou décédés ou guéris par jour",sep="")
     }
-  plot(x,y,ylim=range(c(0,y)),type="n",xlab="Date",ylab="Nombre de cas ",
+  plot(x,y,ylim=range(c(0,maxy)),type="n",xlab="Date",ylab="Nombre de cas ",
        main=vtext,axes=FALSE)
   vx1pos <- round(seq(from=1,to=nbrejour,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos

@@ -3,10 +3,10 @@
 # des dates de fin des vagues epidemiques dans differents pays
 # Auteurs: Patrick Gasqui, Maude Jacquot
 # Cree le 14 Avril 2020
-# Derniere modification le 21 Avril 2020
+# Derniere modification le 27 Avril 2020
 # 
 # Source de donnees: https://github.com/CSSEGISandData/COVID-19
-# Periode consideree: du 22/01/2020 au 20/04/2020
+# Periode consideree: du 22/01/2020 au 26/04/2020
 # 
 # Variables cles:
 #  cas confirmes:	xcasconf
@@ -22,9 +22,11 @@ source("FunctionCovidVisuMonde.R")
 source("FunctionCovidModelEstim.R")
 
 # Intinialisation de la date de fin de l'analyse
-vdatFic <- c("2004")
-vdatfin <- c("20-04-2020")
+vdatFic <- c("2604")
+vdatfin <- c("26-04-2020")
 
+# paramètre d'affichage
+options(warn=-1)
 
 ############################################
 # Visualisation des observations pour le Monde
@@ -41,14 +43,14 @@ FctVisuCovidMonde(vpays,vdatfin,vtaillepop,vdatFic)
 # Creation du fichier de sortie resume
 vnomFicOutResnum <- paste("ResNumParPays",".txt",sep="")
 sink(vnomFicOutResnum,append=FALSE)
-cat("Pays",";","Region")
+cat("Pays",)
 cat(";","jour debut",";","date debut")
 cat(";","jour crois",";","date crois")
 cat(";","jour Za0.01",";","date Za0.01",";","duree epid. en jour")
 cat(";","jour Za0.001",";","date Za0.001",";","duree epid. en jour")
 cat(";","prop. act. deces",";","prop. fin. deces")
 cat(";","taux deces p1",";","taux guerison p2",";","prop. cas confirmes/pop.tot. en pour mille")
-cat(";","taux inf. pop. en % pour TDR=0.01",";","taux inf. pop. en % pour TDR=0.02",";","taux inf. pop. en % pour TDR=0.03")
+cat(";","taux inf. pop. en % pour TDR=0.005",";","taux inf. pop. en % pour TDR=0.010",";","taux inf. pop. en % pour TDR=0.020")
 cat("\n")
 sink()
 
@@ -59,10 +61,11 @@ vnjestim <- 10 # les 10 derniers jours
 ## Analyse pour l'Autriche
 ####
 
-vpays   <- c("Austria")
-vregion <- c("")
+vpays      <- c("Austria")
+vregion    <- c("")
 vindJdebut <- 50	
-vindJfin <- 200
+vnjestim   <- 25 	# les vnjestim derniers jours
+vindJfin   <- 200
 vtaillepop <- 8.8	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -71,10 +74,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour l'Espagne
 ####
 
-vpays   <- c("Spain")
-vregion <- c("")
-vindJdebut <- 35
-vindJfin <- 200
+vpays      <- c("Spain")
+vregion    <- c("")
+vindJdebut <- 32
+vnjestim   <- 10 	# les vnjestim derniers jours
+vindJfin   <- 250
 vtaillepop <- 49.3	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -83,10 +87,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour l'Italie
 ####
 
-vpays   <- c("Italy")
-vregion <- c("")
+vpays      <- c("Italy")
+vregion    <- c("")
 vindJdebut <- 15
-vindJfin <- 350
+vnjestim   <- 10 	# les vnjestim derniers jours
+vindJfin   <- 350
 vtaillepop <- 60.4	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -95,10 +100,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour la France
 ####
 
-vpays   <- c("France")
-vregion <- c("")
+vpays      <- c("France")
+vregion    <- c("")
 vindJdebut <- 35
-vindJfin <- 300
+vnjestim   <- 10 	# les vnjestim derniers jours
+vindJfin   <- 300
 vtaillepop <- 67.1	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -107,10 +113,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour l'Allemagne
 ####
 
-vpays   <- c("Germany")
-vregion <- c("")
+vpays      <- c("Germany")
+vregion    <- c("")
 vindJdebut <- 35
-vindJfin <- 200
+vnjestim   <- 20 	# les vnjestim derniers jours
+vindJfin   <- 200
 vtaillepop <- 80.5	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -119,10 +126,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour la Belgique
 ####
 
-vpays   <- c("Belgium")
-vregion <- c("")
+vpays      <- c("Belgium")
+vregion    <- c("")
 vindJdebut <- 45
-vindJfin <- 300	# 200
+vnjestim   <- 10 	# les vnjestim derniers jours  
+vindJfin   <- 300
 vtaillepop <- 11.6	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -131,9 +139,10 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour la Suisse
 ####
 
-vpays   <- c("Switzerland")
-vregion <- c("")
-vindJdebut <- 50
+vpays      <- c("Switzerland")
+vregion    <- c("")
+vindJdebut <- 40
+vnjestim   <- 20 	# les vnjestim derniers jours
 vindJfin   <- 200
 vtaillepop <- 8.3	# en million d'habitants
 vdelta <- 0
@@ -143,9 +152,10 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour le Danemark
 ####
 
-vpays   <- c("Denmark")
-vregion <- c("")
-vindJdebut <- 38
+vpays      <- c("Denmark")
+vregion    <- c("")
+vindJdebut <- 40
+vnjestim   <- 20 	# les vnjestim derniers jours
 vindJfin   <- 200
 vtaillepop <- 5.8	# en million d'habitants
 vdelta <- 0
@@ -155,10 +165,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour la Suede
 ####
 
-vpays   <- c("Sweden")
-vregion <- c("")
+vpays      <- c("Sweden")
+vregion    <- c("")
 vindJdebut <- 50	
-vindJfin   <- 500
+vnjestim   <- 10 	# les vnjestim derniers jours
+vindJfin   <- 550
 vtaillepop <- 10.0	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -167,10 +178,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour les Etats-Unis
 ####
 
-vpays   <- c("US")
-vregion <- c("")
+vpays      <- c("US")
+vregion    <- c("")
 vindJdebut <- 50
-vindJfin   <- 300	# 500
+vnjestim   <- 10 	# les vnjestim derniers jours
+vindJfin   <- 300
 vtaillepop <- 329.3	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -179,9 +191,10 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour le Portugal
 ####
 
-vpays   <- c("Portugal")
-vregion <- c("")
+vpays      <- c("Portugal")
+vregion    <- c("")
 vindJdebut <- 41
+vnjestim   <- 10 	# les vnjestim derniers jours
 vindJfin   <- 500
 vtaillepop <- 10.4	# en million d'habitants
 vdelta <- 0
@@ -191,10 +204,11 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Analyse pour le Canada
 ####
 
-vpays   <- c("Canada")
-vregion <- c("")
+vpays      <- c("Canada")
+vregion    <- c("")
 vindJdebut <- 40
-vindJfin <- 200
+vnjestim   <- 10 	# les vnjestim derniers jours
+vindJfin   <- 200
 vtaillepop <- 35.9	# en million d'habitants
 vdelta <- 0
 res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjestim,vtaillepop,vdatFic,vdelta,vnomFicOutResnum)
@@ -204,9 +218,10 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Probleme des guerisons ???
 ####
 
-vpays   <- c("Netherlands")
-vregion <- c("")
+vpays      <- c("Netherlands")
+vregion    <- c("")
 vindJdebut <- 45	
+vnjestim   <- 10 	# les vnjestim derniers jours
 vindJfin   <- 500
 vtaillepop <- 17.2	# en million d'habitants
 vdelta <- 0
@@ -217,9 +232,10 @@ res <- FunctionRCovidModelEstim(vpays,vregion,vdatfin,vindJdebut,vindJfin,vnjest
 ## Probleme des guerisons ???
 ####
 
-vpays   <- c("United Kingdom")
-vregion <- c("")
+vpays      <- c("United Kingdom")
+vregion    <- c("")
 vindJdebut <- 42
+vnjestim   <- 10 	# les vnjestim derniers jours
 vindJfin   <- 500
 vtaillepop <- 65.1	# en million d'habitants
 vdelta <- 0

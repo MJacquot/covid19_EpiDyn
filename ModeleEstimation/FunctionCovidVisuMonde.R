@@ -1,7 +1,7 @@
 #' Fonction necessaire a l'estimation des parametres du modele covid-19
 #' Auteurs: Patrick Gasqui, Maude Jacquot
 #' Cree le 10 Avril 2020
-#' Derniere modification le 19 Avril 2020
+#' Derniere modification le 24 Avril 2020
 
 # Visualisation des donnees observees pour le monde
 FctVisuCovidMonde <- function(vxpays,vxdatfin,vxtaillepop,vxdatFic) {
@@ -86,13 +86,14 @@ FctVisuCovidMonde <- function(vxpays,vxdatfin,vxtaillepop,vxdatFic) {
   xjcasdece <- c(0,diff(xcasdece))
   xjcasguer <- c(0,diff(xcasguer))
   y <- xjcasconf
+  maxy <- max(xjcasconf,xjcasdece,xjcasguer)
   vtext <- paste(" Données ",vpays," du ",vdatdeb," au ",vdatfin,
                 "\n cas confirmés-décédés-guéris / jour",sep="")
   if ( vregion != c("") ) {
     vtext <- paste(" Données ",vpays," & ",vregion," du ",vdatdeb," au ",vdatfin,
                  "\n cas confirmés-décédés-guéris / jour",sep="")
     }
-  plot(x,y,ylim=range(c(0,y)),type="n",xlab="Date",ylab="Nombre de cas ",
+  plot(x,y,ylim=range(c(0,maxy)),type="n",xlab="Date",ylab="Nombre de cas ",
      main=vtext,axes=FALSE)
   vx1pos <- round(seq(from=1,to=nbrejour,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
