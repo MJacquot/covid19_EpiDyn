@@ -1,10 +1,10 @@
 #' Fonction necessaire a l'estimation des parametres du modele covid-19
 #' Auteurs: Patrick Gasqui, Maude Jacquot
 #' Cree le 10 Avril 2020
-#' Derniere modification le 24 Avril 2020
+#' Derniere modification le 04 Mai 2020
 
 # Estimation des parametres du modele et visualisation des resultats et des donnees pour un pays donne
-FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJfin,vxnjestim,vxtaillepop,vxdatFic,vxdelta,vxnomFicOutResnum) {
+FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJfin,vxnjestim,vxtaillepop,vxdatFic,vxnomFicOutResnum) {
 
   # Initialisation
   vpays <- vxpays
@@ -26,14 +26,12 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
 
   vregion <- vxregion
   vdatfin <- vxdatfin
-  vindJdebut <- vxindJdebut
   vindJfin <- vxindJfin
   vnjestim <- vxnjestim
   vtaillepop <- vxtaillepop
   vdatFic <- vxdatFic 
   vnomFicOutResnum <- vxnomFicOutResnum
-  vdelta <- vxdelta
-
+  
   # date de debut de suivi des donnees
   vdatdeb <- c("22-01-2020")
 
@@ -108,7 +106,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   vx1pos <- round(seq(from=1,to=nbrejour,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
   vx1lab <- rep(" ",length(vx1pos))
-  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),sep="") }
+  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),"/",substring(datex1[i],3,4),sep="") }
   axis(1,at=vx1pos,labels=vx1lab)
   axis(2)
   box()
@@ -122,7 +120,6 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
 
   # Graphique des nombres de cas par jour au cours du temps
   # cas confirmes-gueris-decedes par jour ...
-  #
   x <- 1:nbrejour
   nbrejour <- length(xcasconf)	
   xjcasconf <- c(0,diff(xcasconf))
@@ -141,7 +138,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   vx1pos <- round(seq(from=1,to=nbrejour,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
   vx1lab <- rep(" ",length(vx1pos))
-  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),sep="") }
+  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),"/",substring(datex1[i],3,4),sep="") }
   axis(1,at=vx1pos,labels=vx1lab)
   axis(2)
   box()
@@ -176,7 +173,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   vx1pos <- round(seq(from=1,to=nbrejour,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
   vx1lab <- rep(" ",length(vx1pos))
-  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),sep="") }
+  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),"/",substring(datex1[i],3,4),sep="") }
   axis(1,at=vx1pos,labels=vx1lab)
   axis(2)
   box()
@@ -191,61 +188,40 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
          text.col=2, box.col=2, box.lwd=2,bg="white")
 
     ############################################	
-    # Fonction de calcul du modele de SEDO 
-    fctModelSEDO <- function( px, xcode ) { 
+    # Fonction de calcul du modele de SEDO2 explicite
+    fctModelSEDO2exp <- function( px, xcode ) { 
 
-      kd <- exp(px[1])	# pour les "cas decedes"
-      kg <- exp(px[2])	# pour les "cas gueris"
+      p1 <- exp(px[1])	# pour les "cas decedes"
+      p2 <- exp(px[2])	# pour les "cas gueris"
+      delta <- 50		# pour la valeur de delta 100
 
-      nbJ <- 600
-
-      nbSEDO  <- 3
-      my.atol <- rep(1e-9,nbSEDO)
-
-      fctModelSEDO <- function(t, y, p ) {
-        # parametres locaux
-        kds <- p[1]	
-        kgs <- p[2]
-        # sedo 
-        yd1 <- +kds*y[3]	
-        yd2 <- +kgs*y[3]*(1-y[3])   
-        yd3 <- -(kds*y[3]) - (kgs*y[3]*(1-y[3]))
-        #
-        res <- c(yd1,yd2,yd3)
-        list(res)
-        } 
+      nbJ <- 1000
 
       # valeurs initiales
-      xt   <- 1:nbJ
-      xpD <- c(0.0,rep(0.0,(nbJ-1)))
-      xpG <- c(0.0,rep(0.0,(nbJ-1)))
-      xpA <- c(1.0,rep(0.0,(nbJ-1)))
-      pkp  <- xt[1]
-      xppD <- xpD[1]
-      xppG <- xpG[1]
-      xppA <- xpA[1]
+      xt <- 0:nbJ
+      kp <- (p1+p2)
+      ks <- kp/p2
+      kx <- exp(-kp*(xt-delta))
 
-      for ( k in 2:nbJ ) {
+      y0 <- 1.0 - (ks*(1.0-(1.0/(1.0+exp(kp*delta)))))
+      z0 <- (1.0-(1.0/(1.0+exp(kp*delta))))
+      w10 <- ((ks*p1/kp)*(1.0-log(1.0-z0)))
+      w20 <- ((ks*p2/kp)*(1.0-log(1.0-z0))) - (ks*((1.0-z0)-log(1.0-z0)))
 
-        xstart  <- c(xppD, xppG, xppA) 
-        times   <- c(pkp,xt[k])
-        parms <- c(kd,kg)
-        resSEDO <- rk4(xstart, times, fctModelSEDO, parms )
-        xpD[k]   <- resSEDO[2,1+1]
-        xpG[k]   <- resSEDO[2,1+2]
-        xpA[k]   <- resSEDO[2,1+3]
-        pkp <- xt[k]
-        xppD <- xpD[k]
-        xppG <- xpG[k]
-        xppA <- xpA[k]
-        }
+      y <- y0 +  (ks*(1.0-(1.0/(1.0+kx))))
+      z <- (1.0-(1.0/(1.0+kx))) 
 
-      xpA[(xpA < 0.0)] <- 0.0
-      xpG[(xpG < 0.0)] <- 0.0
-      xpD[(xpD < 0.0)] <- 0.0
-      xpA[(xpA > 1.0)] <- 1.0
-      xpG[(xpG > 1.0)] <- 1.0
-      xpD[(xpD > 1.0)] <- 1.0
+      w <- ks*z
+      w1 <- w10 - ((ks*p1/kp)*(1.0-log(1.0-z)))
+      w2 <- w20 - ((ks*p2/kp)*(1.0-log(1.0-z))) + (ks*((1.0-z)-log(1.0-z)))
+
+      w  <- w/(1.0 - y0)
+      w1 <- w1/(1.0 - y0)
+      w2 <- w2/(1.0 - y0)
+
+      xpA <- w
+      xpD <- w1
+      xpG <- w2
 
       # valeurs estimees 
       if ( xcode == 0 ) {		# xcode == 0
@@ -256,29 +232,28 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
 
       yres
 
-      }  # FIN : fctModelSEDO
+      }  # FIN : fctModelSEDO2exp
 
     ############################################	
     # Fonction pour le Critere des moindres carres
-    #
-    fctMC2M <- function(px, xDMW) {
+    fctMC2SEDO2exp <- function(px, xDMW) {
       # matrice des donnees d'entree :
       # * YJobs1  (les proportions "decedes")
       # * YJobs2  (les proportions "gueris")
       # * YJobs3  (les proportions "actifs")
-      # * joursSEDO  (les indices des jours dans l'echelle du SEDO )  
+      # * joursE  (les indices des jours consideres ) 
       # * nkJ    (nombre total de jour pour l'estimation)
 
-      YJobs <- xDMW[c(1:3),]
-      XJSEDO <- xDMW[4,]
+      YJobs      <- xDMW[c(1:3),]
+      joursE     <- xDMW[4,]
 
-      nkJ <- length(XJSEDO)
+      nkJ <- length(joursE)
 
-      # fonction d'estimation du modele de SEDO pour tous les jours 
-      MYJest <- fctModelSEDO(px,0)
-      YJest <- MYJest[,XJSEDO]
+      # fonction d'estimation du modele pour tous les jours 
+      MYJres <- fctModelSEDO2exp(px,0)
+      YJest <- MYJres[,joursE]
 
-      # calcul du critere des moindres carres
+      # calcul du critère des moindres carres
       resMC <- 0.0
       for ( j in 1:nkJ ) {
         for ( i in 1:3 ) {
@@ -288,15 +263,15 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
           }
         }
 
-      # valeur du critere des MC
+      # valeur du critère des MC
       resMC
-      }  # FIN : fctMC2M
+      }  # FIN : fctMC2SEDO2exp
 
   ############################################
-  # modele logistique avec modele de SEDO 
+  # modele avec SEDO2 explicite 
   # Graphique des proportions des differents cas / cas confirmes au cours du temps
   # avec les courbes estimees par le modele
-  nbK <- vindJfin	# nbrejour
+  nbK <- vindJfin	
   x <- 1:nbrejour
   y <- xpcasacti
   plot(x,y,ylim=range(c(0,1)),type="n",xlim=c(0,nbK),
@@ -305,7 +280,7 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
   vx1pos <- round(seq(from=1,to=nbK,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
   vx1lab <- rep(" ",length(vx1pos))
-  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),sep="") }
+  for ( i in 1:length(vx1pos) ) { vx1lab[i] <- paste(substring(datex1[i],9,10),"/",substring(datex1[i],6,7),"/",substring(datex1[i],3,4),sep="") }
   axis(1,at=vx1pos,labels=vx1lab)
   axis(2)
   box()
@@ -320,11 +295,26 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
 
   # les jours pour lesquels on utilise les donnees pour l'estimation
   joursPourEstim <- c((nbrejour-vnjestim+1):nbrejour)
-  joursPourSEDOEstim <- c((joursPourEstim[1]-vindJdebut+1):(joursPourEstim[vnjestim]-vindJdebut+1))
+  
+  xdebsim <- c(1:60)
+  xnbsim  <- length(xdebsim)
+  xresMC  <- rep(0.0,xnbsim)
+  for ( k in 1:xnbsim ) {
+    joursPourSEDOEstim <- c((joursPourEstim[1]-xdebsim[k]+1):(joursPourEstim[vnjestim]-xdebsim[k]+1))
+    kd0 <- 0.0020		
+    kg0 <- 0.0200	
+    xDMW <- rbind(xpcasdece[joursPourEstim],xpcasguer[joursPourEstim],xpcasacti[joursPourEstim],joursPourSEDOEstim)
+    pinit <- c(log(kd0),log(kg0))
+    resNLMsedo <- nlm( fctMC2SEDO2exp, pinit, xDMW, hessian = FALSE, iterlim = 400 ) 
+    xresMC[k] <- resNLMsedo$minimum
+    }
+  xdebsimmin <- xdebsim[(xresMC==min(xresMC))]
+
+  joursPourSEDOEstim <- c((joursPourEstim[1]-xdebsimmin+1):(joursPourEstim[vnjestim]-xdebsimmin+1))
 
   # valeurs initiales des parametres
   kd0 <- 0.0020		
-  kg0 <- 0.0500		
+  kg0 <- 0.0200	
 
   xDMW <- rbind(xpcasdece[joursPourEstim],
                 xpcasguer[joursPourEstim],
@@ -335,30 +325,28 @@ FunctionRCovidModelEstim <- function(vxpays,vxregion,vxdatfin,vxindJdebut,vxindJ
 
   ############################################
   # fonction de minimisation avec le SEDO ...
-  resNLMsedo <- nlm( fctMC2M, pinit, xDMW, hessian = FALSE, iterlim = 400 ) 
+  resNLMsedo <- nlm( fctMC2SEDO2exp, pinit, xDMW, hessian = FALSE, iterlim = 400 ) 
 
   kdf <- exp(resNLMsedo$estimate[1])
   kgf <- exp(resNLMsedo$estimate[2])
-
   kdelta <- 0	
 
-  xte <- vindJdebut:(nbK-kdelta)
+  MresY <- fctModelSEDO2exp(resNLMsedo$estimate,1)  
+
+  xte <- xdebsimmin:(nbK-kdelta)
   indJ  <- (1:length(xte))
 
-  MresY <- fctModelSEDO(resNLMsedo$estimate,1)  
   xpD <- MresY[1,indJ]
   xpG <- MresY[2,indJ]
   xpA <- MresY[3,indJ]
 
-  xte <- vindJdebut:(nbK-kdelta)
-  indJ  <- (1:length(xte))
   lines(xte,xpA[indJ],lty=2,col=4,lwd=2)
   lines(xte,xpG[indJ],lty=2,col=3,lwd=2)
   lines(xte,xpD[indJ],lty=2,col=2,lwd=2)
 
-  # date de debut vague epidemie a vindJdebut
-  dateDebutVague <- as.Date("2020-01-22") + xte[1]	
-  VR0 <- list(vindJdebut,dateDebutVague)
+  # date de début vague epidemie à xdebsimmin
+  dateDebutVague <- as.Date("2020-01-22") + xdebsimmin	
+  VR0 <- list(xdebsimmin,dateDebutVague)
 
   # determination de l'instant de croisement des courbes
   xtmp <- abs(xpA-xpG)

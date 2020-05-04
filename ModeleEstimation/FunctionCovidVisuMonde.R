@@ -131,7 +131,7 @@ FctVisuCovidMonde <- function(vxpays,vxdatfin,vxtaillepop,vxdatFic) {
     vtext <- paste(" Données ",vpays," & ",vregion," du ",vdatdeb," au ",vdatfin,
                  "\n proportion de cas actifs ou guéris ou décédés / cas confirmés",sep="")
     }
-  plot(x,y,ylim=range(c(0,1)),type="n",xlab="Date",ylab="Proportion de cas / cas confirmés",
+  plot(x,y,ylim=range(c(0,1)),type="n",xlab="Date",ylab="Proportion",
        main=vtext,axes=FALSE)
   vx1pos <- round(seq(from=1,to=nbrejour,length.out=6))	
   datex1 <- as.Date("2020-01-21") + vx1pos
